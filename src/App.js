@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import uuid from "uuid";
 import "./App.css";
 import { Recipe } from "./Recipe";
 
@@ -14,18 +13,17 @@ const App = () => {
   const URL = `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`;
 
   useEffect(() => {
+    const getRecipes = async () => {
+      try {
+        const response = await fetch(URL);
+        const data = await response.json();
+        setRecipes(data.hits);
+      } catch (err) {
+        console.error(err);
+      }
+    };
     getRecipes();
-  }, [query]);
-
-  const getRecipes = async () => {
-    try {
-      const response = await fetch(URL);
-      const data = await response.json();
-      setRecipes(data.hits);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  }, [query, URL]);
 
   const updateSearch = (e) => {
     setSearch(e.target.value);
